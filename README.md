@@ -42,3 +42,20 @@ Documents, traders and payments are saved in the **same browser's localStorage**
 No official state imagery or false government verification is built in. Uploaded QR imagery is presented as **unverified**. This frontend provides a record-keeping interface only. For official documents, use the competent authority's legitimate issuance and verification services.
 
 Responsive navigation persists on all six major routes; iPhone safe-area insets, touch targets, reduced-motion and print media styles are included.
+
+## Imported original front-end sources (October 2026)
+
+User-provided JS and CSS files were preserved in `legacy/js/` and `legacy/css/` so the original implementation can be inspected or further ported. They are **not loaded at runtime** because their direct DOM manipulation and legacy global selectors would conflict with the new React application.
+
+The active React implementation now ports functional concepts from these source files:
+- Company searching/autofill from `index-page.js`
+- Driver suggestions and registration from `form-page.js` + `storage.js`
+- Persisted form draft with QR image omitted from the draft to avoid storage limits
+- Legacy document, trader, and payment import/merging by original keys from `storage.js` and `traders-page.js`
+- Original RTL and print layout guidelines adapted to the new CSS
+
+**Important security warning:** `legacy/js/sync.js` is a deliberately sanitized *disabled adapter*. Its originally uploaded counterpart contained a hard-coded cloud sync token. Do not restore that token to client code. Rotate/revoke it in the existing Cloudflare setup, and use authenticated server-side endpoints before enabling synchronization.
+
+In Settings, if the new site runs under the same origin where old localStorage data exists, a legacy migration panel is shown. If it runs under a different site/domain, browsers cannot read the old origin's localStorage. Export legacy data explicitly from the old application and import the JSON into the new app. Imports are non-destructive to current records, but always export a backup first.
+
+The repository intentionally contains **no** original authoritative customs companies dataset; `data/companies.json` was referenced by old scripts but not supplied. Import that file through the Companies screen when available.

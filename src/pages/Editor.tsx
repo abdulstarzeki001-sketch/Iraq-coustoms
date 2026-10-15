@@ -6,6 +6,7 @@ import { useStore } from '../lib/store';
 import type { Company, DocumentRecord } from '../lib/types';
 import { dateNow, findCompanies, timeNow, uid } from '../lib/format';
 import { ActionButton, Field, PageTitle, Panel } from '../components/UI';
+import { saveDriver, searchDrivers } from '../lib/driverDirectory';
 
 const provinces=['بغداد','البصرة','نينوى','أربيل','النجف','كربلاء','بابل','الأنبار','ذي قار',
  'ديالى','كركوك','واسط','ميسان','المثنى','صلاح الدين','دهوك','السليمانية','القادسية'];
@@ -22,7 +23,23 @@ export default function Editor(){
  const {db,addDocument}=useStore();
  const navigate=useNavigate();
  const location=useLocation();
- const [doc,setDoc]=useState<DocumentRecord>(initial);
+ const draftKey='customs_studio_editor_draft_v1';
+ const [doc,setDoc]=useState<DocumentRecord>(()=>{
+  const fresh=initial();
+  try{
+   const saved=JSON.parse(localStorage.getItem(draftKey)||'{}');
+   if(saved && typeof saved==='object' && !Array.isArray(saved))
+    return {...fresh,...saved,id:'',createdAt:'',qr_image_data:''};
+  }catch{}
+  return fresh;
+ });
+ const [driverSuggestionsOpen,setDriverSuggestionsOpen]=useState(false);
+ useEffect(()=>{
+  const timer=window.setTimeout(()=>{
+   try{localStorage.setItem(draftKey,JSON.stringify({...doc,qr_image_data:''}));}catch{}
+  },500);
+  return ()=>window.clearTimeout(timer);
+ },[doc]);
  const [companyQuery,setCompanyQuery]=useState('');
  const [error,setError]=useState('');
  const [qrName,setQrName]=useState('');
@@ -64,11 +81,24 @@ export default function Editor(){
   if(db.documents.some(x=>x.doc_id.trim()===doc.doc_id.trim())){
    setError('رقم المستند موجود مسبقاً. اختر رقماً مختلفاً.');return;
   }
-  if(!Number.isFinite(Number(doc.document_value_usd))||Number(doc.document_value_usd)<0){
+  if(!/^[0-9٠-٩]+$/.test(doc.doc_id.trim())){
+   setError('رقم المستند يجب أن يحتوي على أرقام فقط.');return;
+  }
+  if(!doc.license_approval_number.trim()||!doc.destination_governorate.trim()){
+   setError('رقم الإجازة والوجهة النهائية حقلان مطلوبان.');return;
+  }
+  if(!/^[0-9٠-٩\\s\\-/]+$/.test(doc.vehicle_number.trim())){
+   setError('رقم العجلة يجب أن يتكوّن من أرقام مع السماح بالشرطات.');return;
+  }
+  if(!Number.isFinite(Number(doc.document_value_usd))||Number(doc.document_value_usd)<=0){
    setError('قيمة المستند يجب أن تكون رقماً غير سالب.');return;
   }
   const record={...doc,id:uid(),createdAt:new Date().toISOString(),document_value_usd:Number(doc.document_value_usd)};
-  addDocument(record);navigate('/documents/'+record.id);
+  addDocument(record);
+  saveDriver({driver_name:record.driver_name,vehicle_number:record.vehicle_number,
+   registration_governorate:record.registration_governorate});
+  try{localStorage.removeItem(draftKey);}catch{}
+  navigate('/documents/'+record.id);
  }
  return <>
   <PageTitle eyebrow="NEW SHIPMENT / إنشاء" title="إدخال مستند شحن"
@@ -110,7 +140,25 @@ export default function Editor(){
      <div className="form-grid">
       <Field label="سيطرة الدخول"><select value={doc.checkpoint_name_control} onChange={e=>update('checkpoint_name_control',e.target.value)}>
        <option value="">اختر السيطرة</option>{['سيطرة دارمان','سيطرة السد','سيطرة جيمن'].map(x=><option key={x}>{x}</option>)}</select></Field>
-      {t('driver_name','اسم السائق','الاسم الكامل',true)}
+      <Field label="اسم السائق">
+       <div className="suggestion-wrap">
+        <input required value={doc.driver_name} placeholder="اسم السائق أو رقم السيارة"
+         onChange={e=>{update('driver_name',e.target.value);setDriverSuggestionsOpen(true);}}
+         onFocus={()=>setDriverSuggestionsOpen(true)}
+         onBlur={()=>window.setTimeout(()=>setDriverSuggestionsOpen(false),160)}/>
+        {driverSuggestionsOpen&&<div className="suggestions" role="listbox" aria-label="السائقون المحفوظون">
+         {searchDrivers(doc.driver_name,10).map((driver,i)=><button type="button" key={driver.driver_name+'-'+driver.vehicle_number+'-'+i}
+           onMouseDown={e=>e.preventDefault()} onClick={()=>{
+             setDoc(prev=>({...prev,driver_name:driver.driver_name,vehicle_number:driver.vehicle_number,
+                registration_governorate:driver.registration_governorate}));
+             setDriverSuggestionsOpen(false);
+           }}>
+           <strong>{driver.driver_name}</strong>
+           <small>{driver.vehicle_number} · {driver.registration_governorate||'محافظة غير محددة'}</small>
+         </button>)}
+        </div>}
+       </div>
+      </Field>
       {t('vehicle_number','رقم السيارة','رقم السيارة',true)}
       {t('registration_governorate','محافظة تسجيل العجلة')}
       <Field label="الوجهة النهائية"><select value={doc.destination_governorate} onChange={e=>update('destination_governorate',e.target.value)}>
@@ -136,7 +184,7 @@ export default function Editor(){
      <p className="summary-note">عند الحفظ ستُسجّل القيمة ضمن المستحقات على التاجر، وتظهر في كشف حسابه تلقائياً.</p>
      {error&&<div role="alert" className="form-error">{error}</div>}
      <ActionButton type="submit" className="full"><FileCheck2 size={18}/> حفظ وعرض المستند</ActionButton>
-     <button type="button" className="subtle-button full" onClick={()=>{setDoc(initial());setCompanyQuery('');setQrName('');setError('');}}>
+     <button type="button" className="subtle-button full" onClick={()=>{try{localStorage.removeItem(draftKey);}catch{}setDoc(initial());setCompanyQuery('');setQrName('');setError('');}}>
       <ArrowRight size={16}/> مسح الاستمارة</button>
      <small className="as-is-warning">هذه استمارة إدارية داخلية غير معتمدة من جهة حكومية.</small>
     </Panel>

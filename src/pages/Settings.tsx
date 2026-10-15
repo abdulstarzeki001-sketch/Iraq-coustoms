@@ -3,6 +3,7 @@ import type { ChangeEvent } from 'react';
 import { AlertTriangle, Database, Download, HardDriveDownload, RotateCcw, ShieldAlert, Upload } from 'lucide-react';
 import { useStore, validDatabase } from '../lib/store';
 import { companyFrom, dateNow, downloadText } from '../lib/format';
+import { hasLegacyData, legacyFromExport, legacyStats, isLegacyExport, mergeLegacyDatabase, readLegacyDatabase } from '../lib/legacyMigration';
 import type { Company } from '../lib/types';
 import { ActionButton, PageTitle, Panel } from '../components/UI';
 
@@ -21,6 +22,11 @@ export default function Settings(){
    if(validDatabase(data)) {
     if(!window.confirm('سيتم استبدال البيانات الحالية بالكامل بمحتويات النسخة الاحتياطية. هل تريد المتابعة؟'))return;
     replaceDatabase(data);setOk('تمت استعادة نسخة قاعدة البيانات.');
+   } else if (isLegacyExport(data)) {
+    const imported=legacyFromExport(data);
+    if(!window.confirm('استيراد البيانات من النسخة القديمة وإضافتها إلى السجلات الحالية بدون حذفها؟'))return;
+    replaceDatabase(mergeLegacyDatabase(db,imported));
+    setOk('تم استيراد سجلات النسخة القديمة.');
    } else {
     const rows=Array.isArray(data)?data:Array.isArray(data?.companies)?data.companies:null;
     if(!rows)throw new Error('الملف لا يحتوي على نسخة بيانات صالحة أو قائمة شركات.');
@@ -30,6 +36,20 @@ export default function Settings(){
    }
   } catch(err){setError(err instanceof Error?err.message:'فشل الاستيراد');}
   finally{e.target.value='';}
+ }
+ function importOldBrowserData(){
+  setError('');setOk('');
+  try{
+   const old=readLegacyDatabase();
+   if(!old.documents.length&&!old.traders.length&&!old.payments.length){
+     setError('لا توجد قيود قابلة للترحيل في التخزين المحلي الحالي. يمكنك استيراد ملف JSON صادر من النسخة القديمة.');
+     return;
+   }
+   if(!window.confirm('إضافة السجلات القديمة إلى بيانات هذا الموقع؟ لا تُحذف البيانات السابقة.'))return;
+   const combined=mergeLegacyDatabase(db,old);
+   replaceDatabase(combined);
+   setOk('تم ترحيل بيانات المستندات والتجار والقبوضات بنجاح، بدون حذف بياناتك الحالية.');
+  }catch(err){setError(err instanceof Error?err.message:'تعذّر ترحيل البيانات');}
  }
  function deleteEverything(){
   if(window.confirm('تحذير: سيتم حذف جميع الشركات والمستندات والتجار والقبوضات المحفوظة في هذا المتصفح. هل تريد المتابعة؟')){
@@ -41,6 +61,13 @@ export default function Settings(){
  return <>
   <PageTitle eyebrow="SYSTEM PREFERENCES / الإعدادات" title="الإعدادات والبيانات"
    description="تحكّم ببياناتك المحلية، النسخ الاحتياطي والاستيراد الآمن."/>
+  {hasLegacyData()&&<Panel className="privacy-note" style={{marginBottom:18}}>
+   <Database size={24}/>
+   <div><h2 style={{fontSize:16,marginBottom:8}}>اكتُشفت بيانات من النسخة القديمة</h2>
+    <p>يظهر {legacyStats().documents} مستند و{legacyStats().payments} حركة قبض و{legacyStats().traders} تاجر في تخزين هذا النطاق. النسخة القديمة نفسها لا تُحذف.</p>
+    <button className="action-button primary" onClick={importOldBrowserData}><Upload size={17}/> ترحيل بيانات النسخة القديمة</button>
+   </div>
+  </Panel>}
   <div className="settings-grid">
    <Panel className="settings-card"><div className="settings-icon"><Database size={24}/></div>
     <h2>قاعدة البيانات المحلية</h2><p>المحتوى محفوظ داخل المتصفح على هذا الجهاز فقط؛ لا توجد مزامنة سحابية مفعّلة.</p>
