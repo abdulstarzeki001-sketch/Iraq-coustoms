@@ -87,7 +87,7 @@ export default function Editor(){
   if(!doc.license_approval_number.trim()||!doc.destination_governorate.trim()){
    setError('رقم الإجازة والوجهة النهائية حقلان مطلوبان.');return;
   }
-  if(!/^[0-9٠-٩\\s\\-/]+$/.test(doc.vehicle_number.trim())){
+   if(!/^[0-9٠-٩\\s/-]+$/.test(doc.vehicle_number.trim())){
    setError('رقم العجلة يجب أن يتكوّن من أرقام مع السماح بالشرطات.');return;
   }
   if(!Number.isFinite(Number(doc.document_value_usd))||Number(doc.document_value_usd)<=0){
