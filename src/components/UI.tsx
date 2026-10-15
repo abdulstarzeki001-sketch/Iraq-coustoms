@@ -1,7 +1,8 @@
-import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 import { ArrowUpLeft, Inbox, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
+import type { HTMLMotionProps } from 'motion/react';
 
 export function PageTitle({eyebrow,title,description,action}:{eyebrow:string,title:string,description?:string,action?:ReactNode}){
  return <div className="page-heading">
@@ -15,7 +16,7 @@ export function Panel({children,className='',...rest}:{children:ReactNode,classN
 export function ActionLink({to,children,secondary=false}:{to:string,children:ReactNode,secondary?:boolean}){
  return <Link to={to} className={secondary?'action-button outline':'action-button primary'}>{children}<ArrowUpLeft size={17}/></Link>;
 }
-export function ActionButton({children,secondary=false,className='',...rest}:ButtonHTMLAttributes<HTMLButtonElement>&{secondary?:boolean}){
+export function ActionButton({children,secondary=false,className='',...rest}:HTMLMotionProps<'button'>&{secondary?:boolean}){
  return <motion.button whileTap={{scale:.975}} transition={{type:'spring',stiffness:400,damping:22}}
   className={'action-button '+(secondary?'outline':'primary')+' '+className} {...rest}>{children}</motion.button>;
 }
