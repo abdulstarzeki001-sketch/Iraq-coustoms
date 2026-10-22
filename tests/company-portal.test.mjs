@@ -17,7 +17,7 @@ test('company portal uses source-aligned sections without masquerading as the or
   assert.ok(portal.includes(heading),heading);
  }
  assert.match(portal,/لا تُرسل طلبات الشحن إلى منظومة حكومية/);
- assert.doesNotMatch(portal,/Hash Code|75764f1ead79fecd|evolaerbil@/i);
+ assert.doesNotMatch(portal,/Hash Code|password|sms verification/i);
  assert.doesNotMatch(portal,/https?:\/\/.*ur\.gov\.iq/);
 });
 test('request quantity flows to a user-reviewed local document draft',()=>{
