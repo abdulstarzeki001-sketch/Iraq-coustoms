@@ -22,7 +22,7 @@ export default function DocumentView(){
   <div className="document-toolbar">
    <Link className="subtle-button" to="/documents"><ArrowRight size={17}/> عودة للأرشيف</Link>
    <span>معاينة مستند داخلي #{d.doc_id}</span>
-   <button onClick={()=>window.print()} className="action-button primary"><Printer size={18}/> طباعة / حفظ PDF <Download size={16}/></button>
+   <button onClick={()=>window.print()} className="action-button primary"><Printer size={18}/> طباعة A4 / حفظ PDF واضح <Download size={16}/></button>
   </div>
   <article className="print-sheet" dir="rtl">
    <div className="sheet-top"><div><h2>سجل معلومات الحمولة</h2><p>نموذج إداري داخلي لإدارة عمليات النقل والشحن</p></div>
@@ -42,6 +42,6 @@ export default function DocumentView(){
     <span>Customs Studio · Internal Use</span></div>
    <div className="sheet-watermark" aria-hidden="true">نسخة داخلية</div>
   </article>
-  <p className="print-tip">على iPhone وiPad اضغط «طباعة / حفظ PDF»، ثم استخدم خيار مشاركة المعاينة لحفظ نسخة PDF في تطبيق الملفات.</p>
+  <p className="print-tip">للحصول على ملف PDF واضح حتى عند التكبير: استخدم «طباعة A4 / حفظ PDF واضح» واحفظ الناتج من نافذة طباعة Safari؛ النصوص والجداول تُطبع مباشرة بدقة متجهية، دون تحويل الصفحة إلى لقطة شاشة. على iPhone وiPad يمكنك فتح معاينة الطباعة ثم مشاركتها إلى «الملفات». وضوح صورة QR المرفوعة يتوقف على جودة الصورة الأصلية.</p>
  </div>;
 }
