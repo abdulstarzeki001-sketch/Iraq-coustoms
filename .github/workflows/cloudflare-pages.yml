@@ -1,0 +1,54 @@
+name: Validate and deploy Customs Studio to Cloudflare Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      # This is the owner-supplied account ID. Override only with a verified Actions variable.
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID || 'd45cb55f3d7654fc0eee90ca0e844378' }}
+      # Must match the Pages project slug in Workers & Pages (not the GitHub repo name).
+      CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT || 'iraq-coustoms' }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PAGES_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install packages
+        run: npm install --no-audit --no-fund
+      - name: Check TypeScript
+        run: npm run typecheck
+      - name: Build Vite production output
+        run: npm run build
+      - name: Verify production HTML and SPA redirect
+        run: |
+          test -s dist/index.html
+          test -s dist/_redirects
+          test -d dist/assets
+      - name: Upload production build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: customs-studio-dist
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Check publishing secret
+        id: publish
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Build passed but NOT DEPLOYED: set repository secret CLOUDFLARE_PAGES_TOKEN to a Cloudflare Pages Edit API token."
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Verify Pages project and API token
+        if: steps.publish.outputs.ready == 'true'
+        run: node scripts/check-cloudflare-pages.mjs
+      - name: Publish Vite dist to existing Pages project
+        if: steps.publish.outputs.ready == 'true'
+        run: npx --yes wrangler@4 pages deploy dist --project-name "$CLOUDFLARE_PAGES_PROJECT" --branch main
