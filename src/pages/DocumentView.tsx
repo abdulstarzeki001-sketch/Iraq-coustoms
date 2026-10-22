@@ -11,7 +11,7 @@ function SourceTable({title,rows}:{title:string;rows:DetailRow[]}){
   <table className="sheet-table sheet-info-table">
    <colgroup><col style={{width:'35%'}}/><col style={{width:'65%'}}/></colgroup>
    <thead><tr><th colSpan={2} className="sheet-section-title">{title}</th></tr></thead>
-   <tbody>{rows.map(([label,value])=><tr key={label}><th scope="row">{label}</th><td dir="auto">{value?.trim()||'—'}</td></tr>)}</tbody>
+   <tbody>{rows.map(([label,value])=><tr key={label}><th scope="row">{label}</th><td dir="auto">{String(value??'').trim()||'—'}</td></tr>)}</tbody>
   </table>
  </section>;
 }
@@ -40,22 +40,22 @@ export default function DocumentView(){
   ['منطوق الإجازة / الاختصاص',d.license_text_specialization],
   ['العلامة التجارية',d.brand]
  ];
- const rawQr=(d.qr_code||'').trim();
+ const rawQr=String(d.qr_code??'').trim();
  let qrText=rawQr;
  try{
   const link=new URL(rawQr);
   if(link.hostname==='customs-uboor.ur.gov.iq' && link.pathname==='/robot')
    qrText=link.searchParams.get('url') || rawQr;
  }catch{/* Keep text references unchanged, with no external QR service. */}
- const uploadedQr=d.qr_image_data && /^data:image\/(?:png|jpeg|webp);base64,/i.test(d.qr_image_data)
+ const uploadedQr=typeof d.qr_image_data==='string' && /^data:image\/(?:png|jpeg|webp);base64,/i.test(d.qr_image_data)
   ? d.qr_image_data : '';
  const linkQrImage=/^data:image\/(?:png|jpeg|webp);base64,/i.test(qrText)?qrText:'';
  const safeQr=qrText.length>0 && qrText.length<=1800 && !linkQrImage;
  const hasQr=Boolean(safeQr||uploadedQr||linkQrImage);
- const item=d.item_name?.trim()||d.cargo_typedetails?.trim();
+ const item=String(d.item_name||d.cargo_typedetails||'').trim();
  const itemDetails=[d.production_capacity,d.unit].filter(Boolean).join(' ');
  const products=[...((item||itemDetails)?[{item_name:item||'—',production_capacity:d.production_capacity,unit:d.unit,monthly_yearly:''}]:[]),
-  ...(d.items||[]).filter(row=>row.item_name?.trim()||row.production_capacity?.trim())];
+  ...(Array.isArray(d.items)?d.items:[]).filter(row=>row && (String(row.item_name??'').trim()||String(row.production_capacity??'').trim()))];
  async function printPdf(){
   try {
    if(document.fonts?.ready)await document.fonts.ready;
