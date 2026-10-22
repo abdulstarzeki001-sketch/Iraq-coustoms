@@ -1,0 +1,40 @@
+name: Publish Iraq Customs Studio to Cloudflare Pages
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        description: "Existing Cloudflare Pages project name (not the GitHub repository name)"
+        required: true
+        default: "iraq-coustoms"
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: pages-studio-main
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || 'd45cb55f3d7654fc0eee90ca0e844378' }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PAGES_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_PAGES_PROJECT: ${{ inputs.project }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Validate catalog and source port
+        run: node --test tests/*.test.mjs
+      - name: Build production SPA
+        run: npm run build
+      - name: Confirm Cloudflare account, token permissions and existing Pages project
+        run: node scripts/check-pages-target.mjs
+      - name: Deploy built React app only to the selected Pages project
+        run: npx --yes wrangler@4 pages deploy dist --project-name "$CLOUDFLARE_PAGES_PROJECT" --branch main
+      - name: Record successful publication
+        run: echo "Cloudflare Pages upload completed for $CLOUDFLARE_PAGES_PROJECT" >> "$GITHUB_STEP_SUMMARY"
