@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Company, Database, DocumentRecord, Payment, Trader } from './types';
-import { normalize, uid } from './format';
+import { companyFrom, normalize, uid } from './format';
 
 const KEY='customs_studio_database_v1';
 const empty=():Database=>({version:1,companies:[],documents:[],traders:[],payments:[],updatedAt:new Date().toISOString()});
@@ -31,6 +31,20 @@ export function StoreProvider({children}:{children:ReactNode}){
    try {localStorage.setItem(KEY,JSON.stringify(db));}
    catch {setMessage('تعذّر حفظ البيانات: مساحة التخزين ممتلئة. صدّر نسخة احتياطية وقلّل صور QR.');}
  },[db]);
+ // The source catalog is a public, read-only fallback; user-imported companies always win.
+ useEffect(()=>{
+   let cancelled=false;
+   fetch(`${import.meta.env.BASE_URL}data/companies.json`,{cache:'force-cache'})
+     .then(response=>{if(!response.ok)throw new Error('Company catalog unavailable');return response.json();})
+     .then((rows:unknown)=>{
+       if(cancelled||!Array.isArray(rows))return;
+       const companies=rows.map(x=>companyFrom(x as Record<string,unknown>)).filter(c=>c.CompanyNameProject);
+       if(companies.length!==839)return;
+       setDb(prev=>prev.companies.length?prev:{...prev,companies,updatedAt:new Date().toISOString()});
+     })
+     .catch(()=>{if(!cancelled)setMessage('تعذّر تحميل دليل الشركات المرفق؛ يمكنك استيراد ملف JSON يدوياً.');});
+   return ()=>{cancelled=true;};
+ },[]);
  const patch=(change:Partial<Database>)=>setDb(prev=>({...prev,...change,updatedAt:new Date().toISOString()}));
  const value=useMemo<Store>(()=>({
    db,message,dismiss:()=>setMessage(''),

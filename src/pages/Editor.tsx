@@ -66,8 +66,8 @@ export default function Editor(){
  }
  async function onQr(e:ChangeEvent<HTMLInputElement>){
   const f=e.target.files?.[0];if(!f)return;
-  if(!f.type.startsWith('image/')){setError('ملف QR يجب أن يكون صورة.');return;}
-  if(f.size>800000){setError('صورة QR كبيرة جداً. اختر صورة أصغر من 800 كيلوبايت حتى لا تمتلئ مساحة التخزين المحلية.');return;}
+  if(!['image/png','image/jpeg','image/webp'].includes(f.type)){setError('ملف QR يجب أن يكون PNG أو JPEG أو WebP.');return;}
+  if(f.size>1_500_000){setError('صورة QR كبيرة جداً. الحد 1.5 ميغابايت للحفاظ على مساحة التخزين المحلية.');return;}
   const reader=new FileReader();
   reader.onload=()=>{update('qr_image_data',String(reader.result));setQrName(f.name);setError('');};
   reader.onerror=()=>setError('فشل قراءة صورة QR');
@@ -90,7 +90,7 @@ export default function Editor(){
    if(!/^[0-9٠-٩\\s/-]+$/.test(doc.vehicle_number.trim())){
    setError('رقم العجلة يجب أن يتكوّن من أرقام مع السماح بالشرطات.');return;
   }
-  if(!Number.isFinite(Number(doc.document_value_usd))||Number(doc.document_value_usd)<=0){
+  if(!Number.isFinite(Number(doc.document_value_usd))||Number(doc.document_value_usd)<0){
    setError('قيمة المستند يجب أن تكون رقماً غير سالب.');return;
   }
   const record={...doc,id:uid(),createdAt:new Date().toISOString(),document_value_usd:Number(doc.document_value_usd)};
@@ -139,7 +139,7 @@ export default function Editor(){
     <Panel className="editor-panel"><h2 className="form-section-heading"><Truck size={20}/> السائق والحمولة <span>03</span></h2>
      <div className="form-grid">
       <Field label="سيطرة الدخول"><select value={doc.checkpoint_name_control} onChange={e=>update('checkpoint_name_control',e.target.value)}>
-       <option value="">اختر السيطرة</option>{['سيطرة دارمان','سيطرة السد','سيطرة جيمن'].map(x=><option key={x}>{x}</option>)}</select></Field>
+       <option value="">اختر السيطرة</option>{['سيطرة دارمان','سيطرة السد','سيطرة جيمن','سيطرة باوه محمود'].map(x=><option key={x}>{x}</option>)}</select></Field>
       <Field label="اسم السائق">
        <div className="suggestion-wrap">
         <input required value={doc.driver_name} placeholder="اسم السائق أو رقم السيارة"
