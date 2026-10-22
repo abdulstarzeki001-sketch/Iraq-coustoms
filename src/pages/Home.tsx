@@ -14,7 +14,7 @@ export default function Home(){
  const {db}=useStore();
  const totals=traderTotals(db);
  return <>
-  <div className="dashboard-topline"><span className="eyebrow">لوحة التحكم / 2026</span><span className="topline-muted"><span className="online-dot"/> مساحة عمل محلية</span></div>
+  <div className="dashboard-topline"><span className="eyebrow">بوابة الإدارة / لوحة التحكم</span><span className="topline-muted"><span className="online-dot"/> مساحة عمل محلية</span></div>
   <section className="hero">
    <div className="hero-copy">
     <span className="hero-kicker"><Orbit size={16}/> مستقبل إدارة عمليات الشحن</span>

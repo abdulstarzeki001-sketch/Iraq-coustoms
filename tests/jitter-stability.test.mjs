@@ -34,6 +34,8 @@ test('A4 vector printing remains available after stabilization',()=>{
   assert.match(print,/@page\{size:A4/);
   assert.match(print,/\.print-sheet\{position:static!important/);
   assert.match(view,/<QRCodeSVG/);
+  assert.match(view,/setFitPreview/);
+  assert.match(print,/zoom:1!important/);
   assert.match(view,/window\.print\(\)/);
   assert.doesNotMatch(view,/html2canvas|toDataURL/);
 });

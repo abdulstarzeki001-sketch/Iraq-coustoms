@@ -11,6 +11,13 @@ export interface Company {
   TypeIndustryProduction?: string;
   Unit?: string;
   ProductionCapacity?: string;
+  MonthlyYearly?: string;
+}
+export interface ProductItem {
+  item_name: string;
+  production_capacity: string;
+  unit: string;
+  monthly_yearly?: string;
 }
 export interface DocumentRecord {
   id: string; doc_id: string; date_str: string; time_str: string; createdAt: string;
@@ -24,6 +31,7 @@ export interface DocumentRecord {
   weight_quantity: string; destination_governorate: string;
   trader_name: string; document_value_usd: number;
   qr_image_data?: string; qr_code?: string;
+  items?: ProductItem[];
 }
 export interface Trader { id: string; name: string; createdAt: string }
 export interface Payment {

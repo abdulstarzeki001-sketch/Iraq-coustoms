@@ -1,0 +1,130 @@
+/* Shared design language extracted from the supplied company-owner HTML:
+   white top navigation, pale-gray workspace, white outlined cards, compact forms,
+   structured tables, restrained #990707 heading accents. No copied government marks. */
+:root{--source-red:#990707;--source-red-dark:#761018;--source-ink:#1f2937;--source-muted:#6b7280;--source-outline:#e5e7eb;--source-surface:#fff;--source-bg:#f3f4f6}
+body{background:var(--source-bg);color:var(--source-ink)}
+.atmosphere{background:#f3f4f6!important}
+.aurora,.grain,.ambient-grid{display:none!important}
+@media(min-width:1024px){
+ .sidebar-nav{width:100%;height:auto;min-height:76px;position:sticky;top:0;bottom:auto;right:auto;padding:13px clamp(19px,3.5vw,70px);flex-direction:row;align-items:center;gap:20px;background:#fff!important;border:0;border-bottom:1px solid #e5e7eb;box-shadow:0 4px 16px #1122330c;z-index:30}
+ .sidebar-nav .brand{flex:0 0 auto}
+ .sidebar-nav .brand-mark{width:44px;height:44px}
+ .side-section,.side-bottom{display:none!important}
+ .side-links{display:flex;align-items:center;gap:3px;margin-right:auto;min-width:0;overflow-x:auto;scrollbar-width:thin}
+ .side-link{flex:0 0 auto;font-size:11px;min-height:44px;gap:8px;padding:0 11px;border-radius:8px}
+ .side-link svg{width:17px;height:17px}
+ .side-link .link-arrow{display:none}
+ .app-content{margin-right:0!important}
+ .page-shell{max-width:1450px;padding:25px clamp(20px,4vw,66px) 55px}
+}
+.brand strong{letter-spacing:0;font-size:13px!important}
+.brand strong span{color:#990707!important}
+.brand small{color:#758295!important}
+.brand-mark{color:#990707!important;background:#fbf0f0!important;box-shadow:none!important;border:1px solid #ead4d4!important}
+.side-link.active{background:#fff0f0!important;color:#8a0808!important;box-shadow:inset 0 -2px 0 #990707!important;border-color:#f1d4d4!important}
+.side-link:hover{background:#fff4f3;color:#911217}
+.page-heading{align-items:flex-end;padding:0 0 15px;margin-bottom:20px;border-bottom:1px solid #e5e7eb}
+.page-heading h1{font-size:clamp(22px,2.2vw,28px);color:#172c3d;font-weight:900}
+.page-heading .eyebrow{font-size:10px;color:#a12727!important;letter-spacing:.05em}
+.page-heading .eyebrow svg{color:#9b1c26}
+.subheading{font-size:12px;color:#69798a;line-height:1.8}
+.hero{background:#fff!important;min-height:260px;border:1px solid #e5e7eb!important;border-radius:16px!important;box-shadow:0 10px 30px #1a27380b!important}
+.hero:before{background:linear-gradient(90deg,#fff 0%,#fff 71%,#99070709 100%)!important}
+.hero-copy{padding:32px 36px!important;width:100%!important}
+.hero-kicker{background:#fcf0f0!important;border-color:#f3d9d9!important;color:#990707!important;font-size:10px}
+.hero h1{font-size:clamp(27px,3.2vw,39px)!important;line-height:1.48!important;font-weight:900;letter-spacing:0;margin:13px 0!important}
+.hero h1,.hero h1 em,.hero h1 span{color:#243141!important;-webkit-text-fill-color:#243141!important;background:none!important}
+.hero-copy>p,.hero-trust{color:#6b7280!important}
+.hero-copy>p{line-height:1.9!important;max-width:740px}
+.hero-art,.hero-orbit-line{display:none!important}
+.hero .action-button.primary,.action-button.primary{background:#990707!important;color:#fff!important;border-color:#990707!important;box-shadow:0 5px 12px #9907071a!important}
+.hero .action-button.primary:hover,.action-button.primary:hover{background:#7e0808!important;filter:none}
+.hero .action-button.outline,.action-button.outline{background:#fff!important;color:#8c1414!important;border:1px solid #d4aeb0!important}
+.hero .action-button.outline:hover,.action-button.outline:hover{background:#fff5f4!important}
+.glass-panel,.stat-tile,.shortcut-card,.settings-card,.finance-stat{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:12px!important;box-shadow:0 3px 14px #172c3d08!important;color:#1f2937}
+.stat-tile:hover,.shortcut-card:hover{border-color:#d6adb0!important}
+.stat-icon,.shortcut-symbol,.recent-icon,.settings-icon,.company-avatar,.detail-icon{background:#fff3f3!important;color:#990707!important;border:1px solid #edd5d5!important}
+.dashboard-topline,.section-hint,.subheading,.muted,.shortcut-index,.shortcut-card p,.recent-row small{color:#6b7280}
+.stat-number,.shortcut-card h3,.recent-row strong{color:#1d3040!important}
+.stat-name{color:#667788}
+.section-bar{border-bottom:1px solid #e5e7eb;padding:0 0 12px;margin-bottom:15px}
+.section-bar h2{font-size:18px;font-weight:900;color:#253548}
+.panel-heading{padding:0 0 11px;border-bottom:1px solid #edf0f3}
+.panel-heading h3,.form-section-heading,.ledger-toolbar h3{color:#233748!important}
+.form-section-heading{padding-bottom:12px;margin-bottom:16px;border-bottom:1px solid #e5e7eb}
+.form-section-heading svg,.panel-heading h3 svg,.panel-heading a{color:#990707!important}
+.form-section-heading span{color:#9aa4b0}
+.search-panel,.table-panel,.editor-panel,.ledger-panel{border:1px solid #e4e7ec!important;background:#fff!important}
+.search-box{background:#fff!important;border:1px solid #d3dce6!important;border-radius:10px}
+.search-box svg{color:#990707}
+.search-box input{background:#fff!important;color:#263645!important}
+.search-toolbar{border-color:#ebedf1;color:#6b7280}
+.data-table-wrap{overflow:auto;scrollbar-width:thin}
+.data-table{border-collapse:collapse}
+.data-table thead th{background:#990707!important;color:#fff!important;border-color:#a82f2f!important;font-size:11px;line-height:1.55;white-space:nowrap;padding:12px!important}
+.data-table td{border-color:#e2e5e9!important;color:#293646;line-height:1.7}
+.data-table tbody tr:hover td{background:#fcf5f4!important}
+.data-table tbody td:first-child{font-weight:700}
+.id-pill{background:#fff1f1!important;border:1px solid #ead2d2;color:#961616!important}
+.table-action{border:1px solid #e6b5b8!important;color:#951b20!important}
+.table-head{padding-bottom:14px}
+.field-label{font-size:11px;font-weight:800;color:#374151}
+.field input,.field select,.field textarea,.ledger-toolbar select{background:#fff!important;color:#1f2937!important;border:1px solid #d1d8df!important;border-radius:9px!important;min-height:42px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid #bd6262;outline-offset:1px;box-shadow:0 0 0 3px #99070714!important}
+.field input::placeholder,.field textarea::placeholder{color:#a2a7ac}
+.inline-button,.subtle-button{color:#791519!important;background:#fff!important;border:1px solid #dadfe5!important;border-radius:9px}
+.inline-button:hover,.subtle-button:hover{background:#fff5f4!important}
+.company-row:hover,.company-row.selected{background:#fff5f5}
+.company-row strong{color:#263645}
+.company-detail h2{color:#24364a}
+.detail-lines{color:#65758a}
+.finance-stat.selected{border-color:#ccbbbb!important}
+.ledger-total{background:#f8f9fa!important;border-top:2px solid #990707}
+.ledger-total strong{color:#990707!important}
+.settings-card h2{color:#273746!important}
+.settings-card p,.settings-numbers span{color:#748295}
+.settings-numbers strong{color:#991a1a}
+.portal-table th{background:#990707!important;color:#fff!important;border-color:#a83232!important}
+.portal-overline,.portal-breadcrumb a,.portal-products-header h2 svg{color:#990707!important}
+.portal-source{background:#f5f7f9;color:#526274;border-color:#dce1e6}
+.mobile-topbar,.mobile-bottom-nav{background:#fff!important;box-shadow:0 2px 10px #15233412!important}
+.mobile-bottom-nav{border-color:#e5e7eb}
+.bottom-link.active{color:#990707!important;background:#fff0f0!important}
+@media(max-width:740px){
+ .page-shell{padding:19px 13px 38px}
+ .page-heading{flex-direction:column;align-items:stretch;gap:12px}
+ .page-heading h1{font-size:23px}
+ .hero{min-height:0!important}
+ .hero-copy{padding:25px 19px!important}
+ .hero h1{font-size:27px!important}
+ .hero-copy>p{font-size:12px}
+ .document-toolbar-info strong{font-size:12px}
+ .data-table thead th{padding:10px!important}
+}
+@media print{
+ .hero,.source-portal-nav,.document-toolbar{box-shadow:none!important}
+ .data-table thead th{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;background:#990707!important;color:white!important}
+}
+
+
+/* Editable product rows correspond to source: product / production line / unit / capacity. */
+.items-editor{border:1px solid #e2e7eb;border-radius:12px;padding:16px;margin-top:14px;background:#fbfcfd}
+.items-editor-head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:7px;flex-wrap:wrap}
+.items-editor-head h3{font-size:13px;font-weight:850;color:#263749;margin:0 0 6px}
+.items-editor-head p{font-size:11px;line-height:1.8;color:#748292;margin:0}
+.item-editor-row{display:grid;grid-template-columns:minmax(160px,2fr) repeat(3,minmax(95px,1fr)) 56px;gap:9px;padding:13px 0;border-top:1px solid #e7ebef;align-items:end}
+.item-editor-row label{font-size:10px;display:grid;gap:6px;color:#54657a;font-weight:750;min-width:0}
+.item-editor-row input{width:100%;min-width:0;min-height:39px;border:1px solid #d6dee6;border-radius:8px;padding:9px;color:#26384a;background:#fff}
+.item-editor-row input:focus{outline:2px solid #ad4545;outline-offset:1px}
+.item-remove{min-height:39px;background:#fff4f4;border:1px solid #f0d0d0;border-radius:8px;color:#961919;font-size:11px;font-weight:800}
+.table-view-word{font-size:10px;font-weight:750}
+.data-table .table-action{display:inline-flex;align-items:center;gap:5px;padding:6px 8px;width:auto;height:auto}
+@media(max-width:980px){.item-editor-row{grid-template-columns:repeat(2,minmax(0,1fr))}.item-editor-row label:first-child{grid-column:1/-1}.item-remove{grid-column:1/-1}}
+@media print{
+ .items-editor{display:none!important}
+ /* Trader ledger has its own printable data-table layout, independent from the document PDF. */
+ body:has(.ledger-panel) .ledger-panel{background:#fff!important;border:0!important;box-shadow:none!important}
+ body:has(.ledger-panel) .ledger-table thead th{background:#990707!important;color:#fff!important;border:1px solid #a2a2a2!important}
+ body:has(.ledger-panel) .ledger-table{font-size:8px!important}
+ body:has(.ledger-panel) .print-ledger-head{display:block!important;text-align:center!important;border-bottom:2px solid #990707;padding-bottom:9px;margin-bottom:13px}
+}

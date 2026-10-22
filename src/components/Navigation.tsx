@@ -21,7 +21,7 @@ export function Navigation(){
   <aside className="sidebar-nav" aria-label="التنقل الرئيسي">
    <NavLink to="/" className="brand" aria-label="العودة إلى الرئيسية">
     <div className="brand-mark"><ShieldCheck size={26} strokeWidth={1.6}/></div>
-    <div><strong>CUSTOMS <span>STUDIO</span></strong><small>إدارة الشحن والوثائق</small></div>
+    <div><strong>بوابة <span>الشركات والنقل</span></strong><small>الإدارة المحلية · المستندات</small></div>
    </NavLink>
    <div className="side-section">القائمة الرئيسية <span>01 — 06</span></div>
    <nav className="side-links">
@@ -38,7 +38,7 @@ export function Navigation(){
   <header className="mobile-topbar">
    <NavLink to="/" className="brand" aria-label="الرئيسية">
     <div className="brand-mark"><ShieldCheck size={21}/></div>
-    <div><strong>CUSTOMS <span>STUDIO</span></strong><small>{current}</small></div>
+    <div><strong>بوابة <span>الشركات والنقل</span></strong><small>{current}</small></div>
    </NavLink>
    <div className="mobile-live"><ChevronLeft size={15}/><span>{current}</span></div>
   </header>

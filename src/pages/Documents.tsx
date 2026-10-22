@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Download, FileText, Search, ArrowUpLeft, CalendarDays } from 'lucide-react';
+import { Download, FileText, Search, CalendarDays } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../lib/store';
 import { downloadText, money, normalize, toCsv } from '../lib/format';
@@ -26,12 +26,12 @@ export default function Documents(){
     <button className="inline-button" onClick={exportCsv} disabled={!filtered.length}><Download size={16}/> تصدير CSV</button>
    </div>
    {filtered.length?<div className="data-table-wrap"><table className="data-table">
-    <thead><tr><th>رقم المستند</th><th>تاريخ الإنشاء</th><th>الشركة</th><th>السائق / السيارة</th><th>التاجر</th><th>القيمة</th><th>عرض</th></tr></thead>
+    <thead><tr><th>رقم المستند</th><th>تاريخ الإنشاء</th><th>الشركة</th><th>السائق / السيارة</th><th>التاجر</th><th>القيمة</th><th>معاينة PDF</th></tr></thead>
     <tbody>{filtered.map(d=><tr key={d.id}>
      <td><span className="id-pill">{d.doc_id}</span></td><td dir="ltr">{d.date_str}</td><td>{d.company_name_project}</td>
      <td>{d.driver_name}<small className="table-secondary">{d.vehicle_number}</small></td>
      <td>{d.trader_name}</td><td dir="ltr">{money(d.document_value_usd)}</td>
-     <td><Link aria-label={'عرض المستند '+d.doc_id} className="table-action" to={'/documents/'+d.id}><ArrowUpLeft size={18}/></Link></td>
+     <td><Link aria-label={'عرض المستند '+d.doc_id} className="table-action" to={'/documents/'+d.id}><FileText size={17}/><span className="table-view-word">عرض</span></Link></td>
     </tr>)}</tbody></table></div>:
     <Empty title={q?'لا توجد نتائج':'الأرشيف فارغ'} description={q?'جرّب مصطلح بحث مختلفاً.':'ابدأ بإنشاء مستند شحن لتظهر بياناته هنا.'}
      action={!q?<ActionLink to="/documents/new">إنشاء مستند</ActionLink>:undefined}/>}

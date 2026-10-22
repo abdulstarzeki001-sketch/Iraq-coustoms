@@ -3,7 +3,7 @@ import type { FormEvent, ChangeEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowRight, Building2, ClipboardList, FileCheck2, Package, QrCode, Truck, Wallet } from 'lucide-react';
 import { useStore } from '../lib/store';
-import type { Company, DocumentRecord } from '../lib/types';
+import type { Company, DocumentRecord, ProductItem } from '../lib/types';
 import { dateNow, findCompanies, timeNow, uid } from '../lib/format';
 import { ActionButton, Field, PageTitle, Panel } from '../components/UI';
 import { saveDriver, searchDrivers } from '../lib/driverDirectory';
@@ -17,7 +17,7 @@ const initial=():DocumentRecord=>({
  license_approval_number:'',license_approval_date:'',license_text_specialization:'',
  brand:'',item_name:'',production_capacity:'',unit:'',cargo_typedetails:'',
  checkpoint_name_control:'',driver_name:'',vehicle_number:'',registration_governorate:'',
- weight_quantity:'',destination_governorate:'',trader_name:'',document_value_usd:0,qr_image_data:'',qr_code:''
+ weight_quantity:'',destination_governorate:'',trader_name:'',document_value_usd:0,qr_image_data:'',qr_code:'',items:[]
 });
 export default function Editor(){
  const {db,addDocument}=useStore();
@@ -53,7 +53,7 @@ export default function Editor(){
    license_approval_number:c.LicenseApprovalNumber||'',license_approval_date:c.LicenseApprovalDate||'',
    license_text_specialization:c.LicenseTextSpecialization||'',brand:c.Brand||'',
    cargo_typedetails:c.CargoDetails||c.TypeIndustryProduction||'',item_name:c.TypeIndustryProduction||c.CargoDetails||'',
-   unit:c.Unit||''}));
+   unit:c.Unit||'',production_capacity:c.ProductionCapacity||prev.production_capacity}));
   setCompanyQuery(c.CompanyNameProject);setShowResults(false);
  }
  useEffect(()=>{
@@ -63,6 +63,13 @@ export default function Editor(){
    if(state.quantity)update('weight_quantity',state.quantity);
   }
  },[location.key]);
+ function addProductItem(){
+  update('items',[...(doc.items||[]),{item_name:'',production_capacity:'',unit:'',monthly_yearly:''}]);
+ }
+ function editProductItem(index:number,key:keyof ProductItem,value:string){
+  update('items',(doc.items||[]).map((item,i)=>i===index?{...item,[key]:value}:item));
+ }
+ function removeProductItem(index:number){update('items',(doc.items||[]).filter((_,i)=>i!==index));}
  function t(name:keyof DocumentRecord,label:string,placeholder='',required=false){
   return <Field label={label}><input required={required} name={String(name)} value={String(doc[name]??'')}
    placeholder={placeholder} onChange={e=>update(name,e.target.value as never)} /></Field>;
@@ -169,7 +176,17 @@ export default function Editor(){
       {t('weight_quantity','الوزن / الكمية')}
      </div>
      <Field label="تفاصيل الحمولة"><textarea rows={3} value={doc.cargo_typedetails} onChange={e=>update('cargo_typedetails',e.target.value)}/></Field>
-     <div className="form-grid">{t('item_name','المادة / المنتج')}{t('production_capacity','الطاقة الإنتاجية')}{t('unit','الوحدة')}</div>
+     <div className="form-grid">{t('item_name','المادة / المنتج الرئيسي')}{t('production_capacity','الطاقة الإنتاجية')}{t('unit','الوحدة')}</div>
+     <div className="items-editor"><div className="items-editor-head"><div><h3>المواد / المنتجات المرخَّصة</h3><p>أضف مواد أخرى عند وجود أكثر من منتج. تُدرج جميعها في جدول الوثيقة المطبوعة.</p></div>
+       <button type="button" className="inline-button" onClick={addProductItem}><Package size={16}/> إضافة منتج</button></div>
+      {(doc.items||[]).map((item,i)=><div className="item-editor-row" key={i}>
+       <label>اسم المنتج<input value={item.item_name} onChange={e=>editProductItem(i,'item_name',e.target.value)} placeholder="اسم المادة"/></label>
+       <label>خط الإنتاج<input value={item.monthly_yearly||''} onChange={e=>editProductItem(i,'monthly_yearly',e.target.value)} placeholder="شهري / سنوي"/></label>
+       <label>الطاقة الإنتاجية<input value={item.production_capacity} onChange={e=>editProductItem(i,'production_capacity',e.target.value)} placeholder="الكمية"/></label>
+       <label>الوحدة<input value={item.unit} onChange={e=>editProductItem(i,'unit',e.target.value)} placeholder="طن / عدد"/></label>
+       <button type="button" className="item-remove" onClick={()=>removeProductItem(i)} aria-label={'حذف المنتج '+(i+1)}>حذف</button>
+      </div>)}
+     </div>
     </Panel>
     <Panel className="editor-panel"><h2 className="form-section-heading"><QrCode size={20}/> رمز QR المرفق <span>04</span></h2>
      <Field label="رفع صورة QR (اختياري)" hint="يُعرض كصورة مرفقة فقط؛ لا تُعد دليلاً على صحة المستند.">

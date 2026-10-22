@@ -22,7 +22,7 @@ export default function CompanyPortal(){
  const [quantity,setQuantity]=useState('');
  const [query,setQuery]=useState('');
  const selectedNumber=number||'';
- const company=db.companies.find(c=>String(c.Number)===selectedNumber);
+ const company=db.companies.find(c=>String(c.Number)===selectedNumber || normalize(c.CompanyNameProject)===normalize(selectedNumber));
  const records=useMemo(()=>db.documents.filter(d=>company&&(
   (d.company_number && String(d.company_number)===String(company.Number)) ||
   normalize(d.company_name_project)===normalize(company.CompanyNameProject)
@@ -102,7 +102,7 @@ export default function CompanyPortal(){
    <div className="portal-table-wrap"><table className="portal-table">
     <thead><tr><th>#</th><th>المنتج</th><th>خط الإنتاج</th><th>الوحدة</th><th>الطاقة الإنتاجية</th><th>الكمية المطلوبة</th><th>المصدر</th></tr></thead>
     <tbody>{normalize(itemName+' '+(company.TypeIndustryProduction||'')).includes(normalize(query))?
-     <tr><td>1</td><td className="portal-product-name">{itemName}</td><td>{company.TypeIndustryProduction||'—'}</td>
+     <tr><td>1</td><td className="portal-product-name">{itemName}</td><td>{company.MonthlyYearly||'غير مدون'}</td>
       <td>{company.Unit||'—'}</td><td>{company.ProductionCapacity||'غير مدونة كحقل مستقل'}</td>
       <td><input type="text" inputMode="decimal" value={quantity} placeholder="أدخل الكمية" aria-label="الكمية المطلوبة"
        onChange={e=>setQuantity(e.target.value.replace(/[^0-9٠-٩۰-۹.,\s]/g,''))}/></td>
