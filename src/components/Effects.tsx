@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 /**
  * Decorative backdrop never moves the document or listens to scroll.
- * Safari's dynamic viewport and ScrollTrigger measurements otherwise cause
+ * Safari's changing browser viewport and repeated scroll measurements cause
  * visible jumps when its address bar changes height.
  */
 export function Atmosphere() {
