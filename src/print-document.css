@@ -1,0 +1,47 @@
+/* Source-aligned administrative document layout; text stays native/vector in PDF printing. */
+.print-sheet{height:auto;overflow:visible}
+.sheet-section{margin:0 0 12px;break-inside:auto}
+.sheet-section-title{font-size:12px;line-height:1.65;font-weight:900;color:#922632;border-right:4px solid #922632;padding:3px 10px;margin:9px 0 7px;background:#faf7f7}
+.sheet-products thead th{background:#eff1f2;color:#333;font-weight:800}
+.sheet-products th,.sheet-products td{width:33.333%;text-align:right}
+.sheet-qr{break-inside:avoid}
+.sheet-qr img{image-rendering:auto;max-width:110px;max-height:110px}
+.sheet-finance,.sheet-subject,.sheet-section-title,.sheet-top{break-inside:avoid}
+.sheet-foot{break-inside:avoid;margin-top:18px}
+.sheet-foot strong{font-size:9px;font-weight:700}
+.sheet-table{table-layout:auto}
+.sheet-table td{overflow-wrap:anywhere}
+.sheet-reference{overflow-wrap:anywhere}
+@media(max-width:740px) and (not print){
+ .print-sheet{padding:18px 12px;min-height:0;box-shadow:0 10px 35px #0006}
+ .sheet-top{grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr);gap:5px}
+ .sheet-top h2{font-size:12px}
+ .sheet-top p{font-size:8px}
+ .sheet-identity{width:53px;height:53px;font-size:18px;border-width:1px}
+ .sheet-identity small{font-size:6px}
+ .sheet-meta>div{font-size:8px;gap:4px}
+ .sheet-meta strong{font-size:8px}
+ .sheet-title{font-size:14px}
+ .sheet-table{font-size:9px}
+ .sheet-table th,.sheet-table td{padding:5px 4px}
+ .sheet-foot{flex-wrap:wrap}
+}
+@media print{
+ @page{size:A4;margin:12mm}
+ @page :first{margin:12mm}
+ html,body,#root{width:auto!important;height:auto!important;overflow:visible!important}
+ .app-content,.page-shell,.document-view{width:auto!important;min-height:0!important;max-width:none!important;overflow:visible!important}
+ .page-shell{display:block!important}
+ .print-sheet{position:static!important;width:auto!important;max-width:none!important;min-height:0!important;height:auto!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important;background:white!important;color:#111!important;display:block!important;overflow:visible!important;break-after:auto!important;page-break-after:auto!important}
+ .print-sheet *{opacity:1!important;transform:none!important;text-shadow:none!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ .sheet-watermark{display:none!important}
+ .sheet-top{break-inside:avoid;border-bottom:2px solid #922632}
+ .sheet-section-title,.sheet-table tr,.sheet-finance,.sheet-qr,.sheet-foot{break-inside:avoid;page-break-inside:avoid}
+ .sheet-section-title{break-after:avoid;page-break-after:avoid}
+ .sheet-table thead{display:table-header-group}
+ .sheet-table th,.sheet-table td{border:1px solid #aaa!important;color:#161616!important}
+ .sheet-table th{background:#f1f1f1!important}
+ .sheet-table tr:nth-child(even) td{background:#fff!important}
+ .sheet-qr img{max-width:31mm;max-height:31mm;width:auto;height:auto;image-rendering:auto}
+ .sheet-foot{margin-top:18px}
+}
