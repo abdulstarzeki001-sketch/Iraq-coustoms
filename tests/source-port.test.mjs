@@ -25,6 +25,8 @@ test('Internal document is a native print layout with no canvas screenshot or fa
  assert.doesNotMatch(src,/html2canvas|toDataURL/);
  assert.match(css,/@page\s*\{\s*size:A4/);
  assert.match(css,/overflow:visible!important/);
+ assert.match(css,/grid-template-columns:minmax\(0,1fr\) 80px minmax\(0,1fr\)!important/);
+ assert.match(css,/\.sheet-meta\{display:block!important;grid-column:auto!important\}/);
 });
 test('Driver suggestions never prefill names of real persons from a hardcoded roster',()=>{
  const src=read('src/lib/driverDirectory.ts');
