@@ -179,3 +179,42 @@
  .ledger-total *{color:black!important}.movement{color:black!important;border:1px solid #777!important;background:transparent!important}
  @page :first{margin:0}
 }
+
+/* Print from the document DOM (vector text and borders), never from a screen-sized screenshot.
+   Print CSS must override the mobile preview rules even on iPhone/iPad Safari. */
+@media print {
+  @page { size: A4 portrait; margin: 0; }
+  html, body, #root { width: auto !important; min-width: 0 !important; height: auto !important; overflow: visible !important; }
+  .app-content, .page-shell, .document-view { width: 100% !important; max-width: none !important; overflow: visible !important; }
+  .page-shell, .page-shell > *, .print-sheet { animation: none !important; transition: none !important; filter: none !important; }
+  .print-sheet {
+    box-sizing: border-box !important;
+    display: flex !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-height: 297mm !important;
+    height: auto !important;
+    padding: 12mm 12mm !important;
+    overflow: visible !important;
+    transform: none !important;
+    break-after: auto !important;
+    page-break-after: auto !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+  .sheet-top { display: grid !important; grid-template-columns: minmax(0,1fr) 84px minmax(0,1fr) !important; gap: 10px !important; }
+  .sheet-meta { display: block !important; grid-column: auto !important; }
+  .sheet-identity { width: 80px !important; height: 80px !important; font-size: 23px !important; }
+  .sheet-top h2 { font-size: 15px !important; }
+  .sheet-table { table-layout: fixed !important; border-collapse: collapse !important; }
+  .sheet-table th, .sheet-table td { padding: 4px 8px !important; font-size: 10px !important; line-height: 1.45 !important; overflow-wrap: anywhere !important; }
+  .sheet-title { font-size: 17px !important; margin: 12px 0 9px !important; }
+  .sheet-subject { margin-bottom: 10px !important; }
+  .sheet-qr img { width: 28mm !important; height: 28mm !important; image-rendering: auto !important; }
+  .sheet-foot, .sheet-finance, .sheet-qr, .sheet-top, .sheet-subject { break-inside: avoid !important; page-break-inside: avoid !important; }
+  .sheet-table tr { break-inside: avoid !important; page-break-inside: avoid !important; }
+  .print-sheet img, .print-sheet svg { max-width: 100%; }
+  .ledger-panel { break-inside: auto !important; }
+  .ledger-table thead { display: table-header-group !important; }
+  .ledger-table tr { break-inside: avoid !important; }
+}
