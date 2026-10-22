@@ -57,7 +57,9 @@ export default function Companies(){
         ['المحافظة',selected.GovernorateName],['الجهة المانحة',selected.GrantingLicenseApproval],
         ['تاريخ الإجازة',selected.LicenseApprovalDate],['الاختصاص',selected.LicenseTextSpecialization],
         ['الإنتاج',selected.TypeIndustryProduction]] as [string,string|undefined][]).map(([k,v])=><div key={k}><span>{k}</span><strong>{v||'—'}</strong></div>)}
-      </div><button className="action-button primary full" onClick={()=>navigate('/documents/new',{state:{company:selected}})}>
+      </div><button className="action-button outline full" style={{marginBottom:10}} onClick={()=>navigate('/companies/'+encodeURIComponent(selected.Number||selected.CompanyNameProject))}>
+       فتح بوابة تفاصيل الشركة <Building2 size={18}/></button>
+      <button className="action-button primary full" onClick={()=>navigate('/documents/new',{state:{company:selected}})}>
        إنشاء مستند لهذه الشركة <FilePlus2 size={18}/></button>
      </>:<Empty title="اختر شركة" description="اضغط على أي شركة من القائمة لعرض تفاصيلها وإنشاء مستند لها."/>}
    </Panel>

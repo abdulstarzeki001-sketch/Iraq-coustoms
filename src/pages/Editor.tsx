@@ -57,8 +57,11 @@ export default function Editor(){
   setCompanyQuery(c.CompanyNameProject);setShowResults(false);
  }
  useEffect(()=>{
-  const state=location.state as {company?:Company}|null;
-  if(state?.company)fill(state.company);
+  const state=location.state as {company?:Company;quantity?:string}|null;
+  if(state?.company){
+   fill(state.company);
+   if(state.quantity)update('weight_quantity',state.quantity);
+  }
  },[location.key]);
  function t(name:keyof DocumentRecord,label:string,placeholder='',required=false){
   return <Field label={label}><input required={required} name={String(name)} value={String(doc[name]??'')}

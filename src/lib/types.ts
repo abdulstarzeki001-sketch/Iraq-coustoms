@@ -10,6 +10,7 @@ export interface Company {
   CargoDetails?: string;
   TypeIndustryProduction?: string;
   Unit?: string;
+  ProductionCapacity?: string;
 }
 export interface DocumentRecord {
   id: string; doc_id: string; date_str: string; time_str: string; createdAt: string;

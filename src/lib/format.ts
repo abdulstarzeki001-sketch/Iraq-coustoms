@@ -29,7 +29,8 @@ export function companyFrom(raw: Record<string, unknown>): Company {
     Brand:get('Brand'),LicenseApprovalNumber:get('LicenseApprovalNumber'),
     GovernorateName:get('GovernorateName'),GrantingLicenseApproval:get('GrantingLicenseApproval'),
     LicenseApprovalDate:get('LicenseApprovalDate'),LicenseTextSpecialization:get('LicenseTextSpecialization'),
-    CargoDetails:get('CargoDetails'),TypeIndustryProduction:get('TypeIndustryProduction'),Unit:get('Unit')
+    CargoDetails:get('CargoDetails'),TypeIndustryProduction:get('TypeIndustryProduction'),Unit:get('Unit'),
+    ProductionCapacity:get('ProductionCapacity')
   };
 }
 export function findCompanies(list: Company[], query: string, limit = 30) {

@@ -14,7 +14,8 @@ const items:{to:string,label:string,short:string,Icon:LucideIcon}[]=[
 export function Navigation(){
  const {pathname}=useLocation();
  const current=pathname.startsWith('/documents/') && pathname!=='/documents/new'
-   ? 'عرض مستند الحمولة' : items.find(item=>item.to===pathname)?.label || 'لوحة التحكم';
+   ? 'عرض مستند الحمولة' : pathname.startsWith('/companies/')
+   ? 'بوابة تفاصيل الشركة' : items.find(item=>item.to===pathname)?.label || 'لوحة التحكم';
  return <>
   <a className="skip" href="#main">تجاوز إلى المحتوى</a>
   <aside className="sidebar-nav" aria-label="التنقل الرئيسي">

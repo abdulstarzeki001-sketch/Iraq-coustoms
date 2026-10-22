@@ -5,6 +5,7 @@ import { Atmosphere } from './components/Effects';
 import { useStore } from './lib/store';
 import Home from './pages/Home';
 import Companies from './pages/Companies';
+import CompanyPortal from './pages/CompanyPortal';
 import Documents from './pages/Documents';
 import Editor from './pages/Editor';
 import Traders from './pages/Traders';
@@ -24,6 +25,7 @@ export default function App() {
       <Routes location={location}>
        <Route path="/" element={<Home/>}/>
        <Route path="/companies" element={<Companies/>}/>
+       <Route path="/companies/:number" element={<CompanyPortal/>}/>
        <Route path="/documents" element={<Documents/>}/>
        <Route path="/documents/new" element={<Editor/>}/>
        <Route path="/documents/:id" element={<DocumentView/>}/>

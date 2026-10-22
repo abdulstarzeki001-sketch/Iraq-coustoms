@@ -5,6 +5,7 @@ import { StoreProvider } from './lib/store';
 import App from './App';
 import './styles.css';
 import './reference-theme.css';
+import './company-portal.css';
 import './print-document.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
