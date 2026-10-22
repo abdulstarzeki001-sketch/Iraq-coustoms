@@ -35,7 +35,11 @@
  .print-sheet{position:static!important;width:auto!important;max-width:none!important;min-height:0!important;height:auto!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important;background:white!important;color:#111!important;display:block!important;overflow:visible!important;break-after:auto!important;page-break-after:auto!important}
  .print-sheet *{opacity:1!important;transform:none!important;text-shadow:none!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
  .sheet-watermark{display:none!important}
- .sheet-top{break-inside:avoid;border-bottom:2px solid #922632}
+ .sheet-top{display:grid!important;grid-template-columns:minmax(0,1fr) 80px minmax(0,1fr)!important;gap:10px!important;break-inside:avoid;border-bottom:2px solid #922632}
+ .sheet-meta{display:block!important;grid-column:auto!important}
+ .sheet-identity{width:76px!important;height:76px!important}
+ .sheet-table{table-layout:fixed!important}
+ .sheet-table th,.sheet-table td{overflow-wrap:anywhere!important}
  .sheet-section-title,.sheet-table tr,.sheet-finance,.sheet-qr,.sheet-foot{break-inside:avoid;page-break-inside:avoid}
  .sheet-section-title{break-after:avoid;page-break-after:avoid}
  .sheet-table thead{display:table-header-group}
