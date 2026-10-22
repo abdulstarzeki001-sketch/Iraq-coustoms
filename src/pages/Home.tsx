@@ -1,4 +1,3 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
 import { Building2, FilePlus2, FileText, TrendingUp, Users, ArrowLeft, ShieldCheck, ScanLine, Workflow, Wallet, Orbit } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useStore, traderTotals } from '../lib/store';
@@ -6,7 +5,6 @@ import { money } from '../lib/format';
 import { ActionLink, PageTitle, Panel, Stat } from '../components/UI';
 import { Reveal } from '../components/Effects';
 
-const Hologram=lazy(()=>import('../components/Hologram'));
 const shortcuts=[
  {to:'/companies',name:'استكشاف الشركات',desc:'بحث سريع بالاسم ورقم الإجازة',icon:Building2},
  {to:'/documents/new',name:'إنشاء مستند',desc:'نموذج حمولة متكامل',icon:FilePlus2},
@@ -15,14 +13,6 @@ const shortcuts=[
 export default function Home(){
  const {db}=useStore();
  const totals=traderTotals(db);
- const [show3d,setShow3d]=useState(false);
- useEffect(()=>{
-  const large=window.matchMedia('(min-width: 1024px)');
-  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
-  const sync=()=>setShow3d(large.matches&&!reduced.matches);
-  sync();large.addEventListener('change',sync);reduced.addEventListener('change',sync);
-  return()=>{large.removeEventListener('change',sync);reduced.removeEventListener('change',sync);};
- },[]);
  return <>
   <div className="dashboard-topline"><span className="eyebrow">لوحة التحكم / 2026</span><span className="topline-muted"><span className="online-dot"/> مساحة عمل محلية</span></div>
   <section className="hero">
@@ -33,7 +23,7 @@ export default function Home(){
     <div className="hero-actions"><ActionLink to="/documents/new">إنشاء مستند جديد</ActionLink><ActionLink to="/companies" secondary>دليل الشركات</ActionLink></div>
     <div className="hero-trust"><ShieldCheck size={15}/> نسخة إدارية مستقلة · لا تصدر مستندات حكومية معتمدة</div>
    </div>
-   <div className="hero-art"><div className="orb-fallback"/>{show3d&&<Suspense fallback={null}><Hologram/></Suspense>}
+   <div className="hero-art"><div className="orb-fallback"/>
     <span className="holo-label one">DATA / FLOW</span><span className="holo-label two">STUDIO / 01</span></div>
    <div className="hero-orbit-line" aria-hidden="true"/>
   </section>
