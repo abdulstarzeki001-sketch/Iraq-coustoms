@@ -20,13 +20,14 @@ test('Internal document is a native print layout with no canvas screenshot or fa
  const src=read('src/pages/DocumentView.tsx');
  const css=read('src/print-document.css');
  assert.match(src,/window\.print\(\)/);
- assert.match(src,/المواد والمنتجات/);
+ assert.match(src,/المواد \/ المنتجات/);
  assert.match(src,/غير حكومية/);
  assert.doesNotMatch(src,/html2canvas|toDataURL/);
  assert.match(css,/@page\s*\{\s*size:A4/);
  assert.match(css,/overflow:visible!important/);
- assert.match(css,/grid-template-columns:minmax\(0,1fr\) 80px minmax\(0,1fr\)!important/);
- assert.match(css,/\.sheet-meta\{display:block!important;grid-column:auto!important\}/);
+ assert.ok(css.includes("grid-template-columns:minmax(0,1fr) 94px minmax(0,1fr)!important"));
+ assert.match(src,/<QRCodeSVG/);
+ assert.match(css,/\.sheet-section-title\{background:#990707!important/);
 });
 test('Driver suggestions never prefill names of real persons from a hardcoded roster',()=>{
  const src=read('src/lib/driverDirectory.ts');

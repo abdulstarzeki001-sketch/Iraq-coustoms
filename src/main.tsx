@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { StoreProvider } from './lib/store';
 import App from './App';
 import './styles.css';
+import './reference-theme.css';
 import './print-document.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

@@ -80,3 +80,13 @@ Account ID supplied for this repository: `d45cb55f3d7654fc0eee90ca0e844378`. **A
 **R2** `Access Key ID`, `Secret Access Key` and `S3 API endpoint` are for R2 object storage, *not Cloudflare Pages*. Never paste credentials into the repository or chat.
 
 No Supabase sync, Cloudflare KV data or server-side authentication has been connected. Business records and user-uploaded QR remain browser-local and should be backed up via Settings before changing domains or devices.
+
+## Reference-inspired interface refresh (22 October 2026)
+
+- Applied a new source-inspired white/soft-gray RTL theme with cardinal-red accents to the existing React pages. Data storage, company catalog, internal accounts and routing are unchanged.
+- Responsive sidebar and mobile bottom navigation remain accessible across six core routes.
+- Reconstructed the document to reflect the uploaded source hierarchy (metadata, checkpoint and driver, company approval, product, QR, and footnotes) without copying official insignia or implying government authorization.
+- Added `qrcode.react` SVG generation for user-entered QR reference text. Uploaded QR images remain unverified and may be lower resolution than the SVG QR.
+- A4 PDF export is through native browser Print / Save as PDF with selectable vector text and SVG paths. No canvas screenshot or raster JPEG PDF is used. On iOS Safari, use Print preview, expand the thumbnail, then Save to Files.
+- Printing keeps A4 dimensions independently of the narrow mobile preview, and does not force the page into a lossy phone-sized screenshot. Long content may span more than one A4 page rather than being clipped.
+- External Cairo Google Fonts improve on-screen fidelity when available; offline systems use Tahoma/Arial fallbacks.
