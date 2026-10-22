@@ -22,10 +22,10 @@ npm run build
 - Environment variable: `NODE_VERSION=22`
 - `public/_redirects` provides SPA route fallback.
 
-The GitHub Actions workflow checks types and production build on commits/PRs. Cloudflare Pages deployment requires connecting the repository in your Cloudflare account, and is **not automatic** just from the files.
+GitHub Actions now checks TypeScript, imported-source safeguards and the production build. Cloudflare Pages can publish via **native GitHub integration** (recommended) or via the separate manual workflow **Publish Iraq Customs Studio to Cloudflare Pages**. The manual workflow builds `dist`, checks the account and project using the API, then deploys only if permissions are valid. It does not automatically replace the legacy live Pages site.
 
 ## Data migration
-The HTML files supplied in the conversation referenced `data/companies.json` and a 839-company dataset, but the JSON dataset was not included. No company records are fabricated. Import the original company list from **Companies** or **Settings**, accepting JSON arrays or `{"companies": [...]}`. Legacy uppercase fields such as `Number`, `CompanyNameProject`, `LicenseApprovalNumber`, `TypeIndustryProduction` are recognized.
+The original public `data/companies.json` from the user-owned `abdulstarzeki001-sketch/raq-customs` repository has now been restored as `public/data/companies.json` with **839 records**. The catalog loads automatically when there are no user-imported companies; previously imported companies are never overwritten. This is a *legacy reference dataset*, not live government verification. Manual JSON import remains available from **Companies** or **Settings**, accepting arrays or `{"companies": [...]}`. Legacy uppercase fields such as `Number`, `CompanyNameProject`, `LicenseApprovalNumber`, `TypeIndustryProduction` are recognized.
 
 Documents, traders and payments are saved in the **same browser's localStorage** under `customs_studio_database_v1`. Data do not sync between devices. Export a JSON backup in Settings frequently. Large QR images may exceed browser quota. To deploy a multi-user system, add a server-side authenticated API, role-based permissions and an auditable database; do not publish private Neon database credentials in this SPA.
 
@@ -58,4 +58,25 @@ The active React implementation now ports functional concepts from these source 
 
 In Settings, if the new site runs under the same origin where old localStorage data exists, a legacy migration panel is shown. If it runs under a different site/domain, browsers cannot read the old origin's localStorage. Export legacy data explicitly from the old application and import the JSON into the new app. Imports are non-destructive to current records, but always export a backup first.
 
-The repository intentionally contains **no** original authoritative customs companies dataset; `data/companies.json` was referenced by old scripts but not supplied. Import that file through the Companies screen when available.
+## Source-aligned upgrade (22 October 2026)
+
+- Restored the public 839-company directory from the older repository without creating fake companies.
+- Preserved user data, accounting and form drafts. Auto-catalog loads only for empty company directories.
+- Converted the reference document structure to React: document metadata, company license details, driver/cargo, products, trader values and optional unverified QR.
+- Added A4 print CSS that leaves text and tables as **native selectable PDF content**, instead of rasterizing an HTML screenshot. Safari: tap **Print / Save PDF** and save/share the PDF from the print preview. Image QR clarity still depends on the uploaded image resolution.
+- Removed hardcoded sample driver identities; saved driver suggestions remain local to the device.
+- Allow zero-value documents. QR uploads accept PNG/JPEG/WebP with a 1.5 MB limit.
+- The original Vue 3 production bundle, server APIs, session authentication, official QR validation and Cloudflare Functions were not supplied. This is a source-aligned local adaptation, not a pixel-identical or government-issued system.
+
+## Deploy this new repository — do not confuse it with legacy Pages
+
+Account ID supplied for this repository: `d45cb55f3d7654fc0eee90ca0e844378`. **A valid account ID does not prove that the Pages project already exists.** The previous account `d2680f7c5ff39f8d9177a51dbf7fec75` belonged to an earlier project link. Never deploy across accounts or overwrite a live site without checking the project.
+
+1. In Cloudflare **Workers & Pages**, create a **new Pages project** attached to `Iraq-coustoms` or confirm an existing one. Use the **Vite** preset, build `npm run build`, output `dist`, production branch `main`.
+2. Native Git integration publishes on pushes to main and does not need a GitHub Actions API token.
+3. Alternatively, create a **Cloudflare API token** with `Account → Cloudflare Pages → Edit`, scoped to the account containing this Pages project. Add only the token string under the GitHub Actions **Repository secret** `CLOUDFLARE_PAGES_TOKEN` (fallback: `CLOUDFLARE_API_TOKEN`). If needed, set `CLOUDFLARE_ACCOUNT_ID` to the correct account.
+4. From GitHub Actions manually run **Publish Iraq Customs Studio to Cloudflare Pages**, entering the **exact existing Pages project name**. The proposed default is `iraq-coustoms`, but it is not confirmed. The workflow first checks for HTTP 401/403 (invalid token/permissions) and 404 (missing project) and refuses to upload on failure.
+
+**R2** `Access Key ID`, `Secret Access Key` and `S3 API endpoint` are for R2 object storage, *not Cloudflare Pages*. Never paste credentials into the repository or chat.
+
+No Supabase sync, Cloudflare KV data or server-side authentication has been connected. Business records and user-uploaded QR remain browser-local and should be backed up via Settings before changing domains or devices.
