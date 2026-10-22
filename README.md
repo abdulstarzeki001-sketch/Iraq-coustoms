@@ -59,3 +59,26 @@ The active React implementation now ports functional concepts from these source 
 In Settings, if the new site runs under the same origin where old localStorage data exists, a legacy migration panel is shown. If it runs under a different site/domain, browsers cannot read the old origin's localStorage. Export legacy data explicitly from the old application and import the JSON into the new app. Imports are non-destructive to current records, but always export a backup first.
 
 The repository intentionally contains **no** original authoritative customs companies dataset; `data/companies.json` was referenced by old scripts but not supplied. Import that file through the Companies screen when available.
+
+
+## تحسين PDF عالي الوضوح (2026-10-22)
+
+- من صفحة المستند استخدم زر **طباعة A4 / حفظ PDF واضح**. يولّد المتصفح PDF من النصوص والجداول المتجهية، وليس من صورة للشاشة؛ لذلك يظل النص واضحاً عند التكبير.
+- على iPhone/iPad في Safari افتح الطباعة ثم مشاركة المعاينة إلى تطبيق الملفات. في خيارات الطباعة اختر A4 و100% إذا كانت متاحة.
+- CSS يعيد شكل A4 الأصلي في الطباعة حتى على الشاشات الضيقة، ويمنع إضافة صفحة فارغة بعد نهاية المستند ويحافظ على صفوف الجداول.
+- دقة أي QR أو شعار *نقطي* مرفوع محدودة بدقة الملف الأصلي؛ تحويله إلى PDF لا يخلق بكسلات إضافية.
+- هذه وثيقة إدارية داخلية، لا وثيقة صادرة عن جهة حكومية.
+
+## نشر Cloudflare Pages الآمن
+
+Workflow: `.github/workflows/cloudflare-pages.yml` (على `main`، أو تشغيل يدوي). ينفذ اختبارات TypeScript، بناء Vite الحقيقي `dist/`، يرفع نسخة ZIP للتوثيق، ثم يتحقق من الصلاحيات قبل رفع الموقع. لا ينسخ ملفات النسخة القديمة إلى الموقع الجديد.
+
+إعدادات GitHub → **Settings → Secrets and variables → Actions**:
+
+1. **Repository secret**: `CLOUDFLARE_PAGES_TOKEN` ← مفتاح API من Cloudflare مع **Account → Cloudflare Pages → Edit** على حساب مشروع Pages. **لا تستخدم** `Access Key ID` أو `Secret Access Key` أو `S3 endpoint` الخاصة بـR2.
+2. **Repository variable** (اختياري إذا اختلف المشروع): `CLOUDFLARE_PAGES_PROJECT` ← الاسم الحقيقي للمشروع في Workers & Pages. الافتراضي `iraq-coustoms` **تخمين من اسم المستودع وليس مشروعاً متحققاً منه**.
+3. **Repository variable** (اختياري): `CLOUDFLARE_ACCOUNT_ID` ← معرّف حساب Cloudflare الذي يملك مشروع Pages؛ الافتراضي هو المعرّف الذي زوّد به المالك `d45cb55f3d7654fc0eee90ca0e844378`.
+
+عند عدم وجود التوكن تنجح عملية البناء ولكن يظهر **NOT DEPLOYED** ولا تُنشر الملفات. عند رفض المفتاح أو غياب المشروع يتوقف النشر قبل الرفع برسالة واضحة (403 أو 404). Cloudflare Dashboard قد يحتوي مشروعاً في حساب مختلف أو باسم مختلف؛ لا تستبدل الموقع الأصلي قبل أخذ نسخة احتياطية من بياناته وخدماته. **لا ترفع المفاتيح إلى GitHub ككود ولا ترسلها بالمحادثة.**
+
+الاختبارات: `node --test tests/*.test.mjs` ثم `npm run typecheck` و`npm run build`.
