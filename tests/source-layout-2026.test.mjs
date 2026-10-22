@@ -46,7 +46,7 @@ test('Additional products are persisted in user records and printed as rows',()=
  assert.match(edit,/addProductItem/);
  assert.match(edit,/editProductItem/);
  assert.match(edit,/removeProductItem/);
- assert.match(view,/\.\.\.\(d\.items\|\|\[\]\)/);
+ assert.match(view,/Array\.isArray\(d\.items\)/);
  assert.match(view,/products\.map/);
 });
 
